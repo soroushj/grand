@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/base64"
+	"encoding/hex"
 	"errors"
 	"flag"
 	"fmt"
@@ -25,6 +27,18 @@ func main() {
 	flag.StringVar(&s, "s", "16", `Size of random byte strings, can be an integer or an inclusive range, e.g. "16-32"`)
 	flag.IntVar(&n, "n", 1, "Number of random byte strings")
 	flag.Parse()
+	encodings := map[string]encoding{
+		"hex":   new(hexEncoding),
+		"b64s":  base64.StdEncoding,
+		"b64sr": base64.RawStdEncoding,
+		"b64u":  base64.URLEncoding,
+		"b64ur": base64.RawURLEncoding,
+	}
+	if _, ok := encodings[e]; !ok {
+		fmt.Fprintf(os.Stderr, "invalid value %q for flag -e: encoding not found\n", s)
+		flag.Usage()
+		os.Exit(2)
+	}
 	sizeMin, sizeMax, err := parseValidateSize(s)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid value %q for flag -s: %v\n", s, err)
@@ -40,6 +54,21 @@ func main() {
 	fmt.Println("e:", e)
 	fmt.Println("s:", sizeMin, sizeMax)
 	fmt.Println("n:", n)
+}
+
+type encoding interface {
+	Encode(dst []byte, src []byte)
+	EncodedLen(n int) int
+}
+
+type hexEncoding struct{}
+
+func (*hexEncoding) Encode(dst []byte, src []byte) {
+	hex.Encode(dst, src)
+}
+
+func (*hexEncoding) EncodedLen(n int) int {
+	return hex.EncodedLen(n)
 }
 
 func parseValidateSize(s string) (sizeMin, sizeMax int, err error) {
