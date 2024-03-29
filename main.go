@@ -25,7 +25,7 @@ func main() {
 	flag.StringVar(&s, "s", "16", `Size of random byte strings, can be an integer or an inclusive range, e.g. "16-32"`)
 	flag.IntVar(&n, "n", 1, "Number of random byte strings")
 	flag.Parse()
-	sizeMin, sizeMax, err := parseSize(s)
+	sizeMin, sizeMax, err := parseValidateSize(s)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid value %q for flag -s: %v\n", s, err)
 		flag.Usage()
@@ -37,7 +37,8 @@ func main() {
 	fmt.Println("n:", n)
 }
 
-func parseSize(s string) (sizeMin, sizeMax int, err error) {
+func parseValidateSize(s string) (sizeMin, sizeMax int, err error) {
+	// parse
 	sizeMinStr, sizeMaxStr, isRange := strings.Cut(s, "-")
 	if isRange {
 		sizeMin, err = strconv.Atoi(sizeMinStr)
@@ -54,6 +55,16 @@ func parseSize(s string) (sizeMin, sizeMax int, err error) {
 			return 0, 0, errors.New("parse error")
 		}
 		sizeMax = sizeMin
+	}
+	// validate
+	if sizeMin < 1 {
+		if isRange {
+			return 0, 0, errors.New("size min must be greater than zero")
+		}
+		return 0, 0, errors.New("size must be greater than zero")
+	}
+	if sizeMax < sizeMin {
+		return 0, 0, errors.New("size max must not be less than size min")
 	}
 	return sizeMin, sizeMax, nil
 }
