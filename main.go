@@ -1,8 +1,12 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
 )
 
 func main() {
@@ -21,8 +25,35 @@ func main() {
 	flag.StringVar(&s, "s", "16", `Size of random byte strings, can be an integer or an inclusive range, e.g. "16-32"`)
 	flag.IntVar(&n, "n", 1, "Number of random byte strings")
 	flag.Parse()
+	sizeMin, sizeMax, err := parseSize(s)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "invalid value %q for flag -s: %v\n", s, err)
+		flag.Usage()
+		os.Exit(2)
+	}
 
 	fmt.Println("e:", e)
-	fmt.Println("s:", s)
+	fmt.Println("s:", sizeMin, sizeMax)
 	fmt.Println("n:", n)
+}
+
+func parseSize(s string) (sizeMin, sizeMax int, err error) {
+	sizeMinStr, sizeMaxStr, isRange := strings.Cut(s, "-")
+	if isRange {
+		sizeMin, err = strconv.Atoi(sizeMinStr)
+		if err != nil {
+			return 0, 0, errors.New("parse error")
+		}
+		sizeMax, err = strconv.Atoi(sizeMaxStr)
+		if err != nil {
+			return 0, 0, errors.New("parse error")
+		}
+	} else {
+		sizeMin, err = strconv.Atoi(s)
+		if err != nil {
+			return 0, 0, errors.New("parse error")
+		}
+		sizeMax = sizeMin
+	}
+	return sizeMin, sizeMax, nil
 }
