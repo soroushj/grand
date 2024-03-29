@@ -97,7 +97,7 @@ range)`)
 	}
 }
 
-// size returns a cryptographically-secure random integer between sizeMin and sizeMax, inclusive.
+// size returns a cryptographically-secure random int between sizeMin and sizeMax, inclusive.
 // It panics if sizeMin > sizeMax.
 func size(sizeMin, sizeMax int) (int, error) {
 	if sizeMin == sizeMax {
@@ -147,14 +147,14 @@ func parseValidateSize(s string) (sizeMin, sizeMax int, err error) {
 	return sizeMin, sizeMax, nil
 }
 
-// encoding contains two methods required for encoding byte slices.
+// encoding has two methods required for encoding byte slices.
 // It satisfies the standard library's base64 and base32 encodings.
 type encoding interface {
 	Encode(dst []byte, src []byte)
 	EncodedLen(n int) int
 }
 
-// hexEncoding satisfies encoding with thin wrappers around the standard library's hex functions.
+// hexEncoding satisfies encoding with thin wrappers around the standard library's hex package functions.
 type hexEncoding struct{}
 
 // Encode wraps hex.Encode, ignoring its return value.
