@@ -96,21 +96,9 @@ func size(sizeMin, sizeMax int) (int, error) {
 	return s, nil
 }
 
-type encoding interface {
-	Encode(dst []byte, src []byte)
-	EncodedLen(n int) int
-}
-
-type hexEncoding struct{}
-
-func (*hexEncoding) Encode(dst []byte, src []byte) {
-	hex.Encode(dst, src)
-}
-
-func (*hexEncoding) EncodedLen(n int) int {
-	return hex.EncodedLen(n)
-}
-
+// parseValidateSize parses s, which can be an integer or a range in the form of sizeMin-sizeMax, e.g. "1-2".
+// It validates that 0 < sizeMin <= sizeMax.
+// If s is an integer n, then sizeMin = sizeMax = n.
 func parseValidateSize(s string) (sizeMin, sizeMax int, err error) {
 	// parse
 	sizeMinStr, sizeMaxStr, isRange := strings.Cut(s, "-")
@@ -141,4 +129,19 @@ func parseValidateSize(s string) (sizeMin, sizeMax int, err error) {
 		return 0, 0, errors.New("size max must not be less than size min")
 	}
 	return sizeMin, sizeMax, nil
+}
+
+type encoding interface {
+	Encode(dst []byte, src []byte)
+	EncodedLen(n int) int
+}
+
+type hexEncoding struct{}
+
+func (*hexEncoding) Encode(dst []byte, src []byte) {
+	hex.Encode(dst, src)
+}
+
+func (*hexEncoding) EncodedLen(n int) int {
+	return hex.EncodedLen(n)
 }
