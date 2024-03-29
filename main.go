@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+	// define and parse flags
 	var (
 		e string
 		s string
@@ -27,6 +28,7 @@ func main() {
 	flag.StringVar(&s, "s", "16", `Size of random byte strings, can be an integer or an inclusive range, e.g. "16-32"`)
 	flag.IntVar(&n, "n", 1, "Number of random byte strings")
 	flag.Parse()
+	// define encodings, validate -e flag value
 	encodings := map[string]encoding{
 		"hex":   new(hexEncoding),
 		"b64s":  base64.StdEncoding,
@@ -39,12 +41,14 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
+	// parse and validate -s flag value
 	sizeMin, sizeMax, err := parseValidateSize(s)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid value %q for flag -s: %v\n", s, err)
 		flag.Usage()
 		os.Exit(2)
 	}
+	// validate -n flag value
 	if n < 1 {
 		fmt.Fprintf(os.Stderr, "invalid value %v for flag -n: n must be greater than zero\n", n)
 		flag.Usage()
