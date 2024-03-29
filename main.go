@@ -31,6 +31,11 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
+	if n < 1 {
+		fmt.Fprintf(os.Stderr, "invalid value %v for flag -n: n must be greater than zero\n", n)
+		flag.Usage()
+		os.Exit(2)
+	}
 
 	fmt.Println("e:", e)
 	fmt.Println("s:", sizeMin, sizeMax)
