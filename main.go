@@ -21,19 +21,26 @@ func main() {
 		s string
 		n int
 	)
-	flag.StringVar(&e, "e", "hex", `Encoding of random byte strings, one of:
-  "hex" - Hex
-  "b64s" - Standard base64
-  "b64sr" - Raw (unpadded) standard base64
-  "b64u" - URL-safe base64
-  "b64ur" - Raw (unpadded) URL-safe base64
-  "b32s" - Standard base32
-  "b32sr" - Raw (unpadded) standard base32
-  "b32h" - Extended hex base32
-  "b32hr" - Raw (unpadded) extended hex base32
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "Grand generates cryptographically-secure random byte strings.\nUsage:\n")
+		flag.PrintDefaults()
+	}
+	flag.StringVar(&e, "e", "hex", "output `encoding`;"+` one of:
+  "hex"   - base16
+  "b64s"  - base64, standard alphabet
+  "b64sr" - base64, standard alphabet, no padding
+  "b64u"  - base64, url safe alphabet
+  "b64ur" - base64, url safe alphabet, no padding
+  "b32s"  - base32, standard alphabet
+  "b32sr" - base32, standard alphabet, no padding
+  "b32h"  - base32, extended hex alphabet
+  "b32hr" - base32, extended hex alphabet, no padding
  `)
-	flag.StringVar(&s, "s", "16", `Size of random byte strings, can be an integer or an inclusive range, e.g. "16-32"`)
-	flag.IntVar(&n, "n", 1, "Number of random byte strings")
+	flag.StringVar(&s, "s", "16", "`size`"+` of random byte strings; an integer or an inclusive range,
+e.g. "16-32" (if a range is specified, the size of each byte
+string will be a cryptographically-secure random number in the
+range)`)
+	flag.IntVar(&n, "n", 1, "number of random byte strings to generate")
 	flag.Parse()
 	// define encodings, validate -e flag value
 	encodings := map[string]encoding{
@@ -49,20 +56,20 @@ func main() {
 	}
 	enc, ok := encodings[e]
 	if !ok {
-		fmt.Fprintf(os.Stderr, "invalid value %q for flag -e: encoding not found\n", e)
+		fmt.Fprintf(flag.CommandLine.Output(), "invalid value %q for flag -e: encoding not found\n", e)
 		flag.Usage()
 		os.Exit(2)
 	}
 	// parse and validate -s flag value
 	sizeMin, sizeMax, err := parseValidateSize(s)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "invalid value %q for flag -s: %v\n", s, err)
+		fmt.Fprintf(flag.CommandLine.Output(), "invalid value %q for flag -s: %v\n", s, err)
 		flag.Usage()
 		os.Exit(2)
 	}
 	// validate -n flag value
 	if n < 1 {
-		fmt.Fprintf(os.Stderr, "invalid value %v for flag -n: n must be greater than zero\n", n)
+		fmt.Fprintf(flag.CommandLine.Output(), "invalid value %v for flag -n: n must be greater than zero\n", n)
 		flag.Usage()
 		os.Exit(2)
 	}
@@ -76,12 +83,12 @@ func main() {
 	for range n {
 		l, err := size(sizeMin, sizeMax)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "error generating random size: %v", err)
+			fmt.Fprintf(flag.CommandLine.Output(), "error generating random size: %v", err)
 			os.Exit(1)
 		}
 		_, err = rand.Read(b[:l])
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "error generating random byte string: %v", err)
+			fmt.Fprintf(flag.CommandLine.Output(), "error generating random byte string: %v", err)
 			os.Exit(1)
 		}
 		enc.Encode(be, b[:l])
