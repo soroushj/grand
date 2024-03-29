@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/rand"
+	"encoding/base32"
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
@@ -22,10 +23,14 @@ func main() {
 	)
 	flag.StringVar(&e, "e", "hex", `Encoding of random byte strings, one of:
   "hex" - Hex
-  "b64s" - Standard Base64
-  "b64sr" - Raw (unpadded) standard Base64
-  "b64u" - URL-safe Base64
-  "b64ur" - Raw (unpadded) URL-safe Base64
+  "b64s" - Standard base64
+  "b64sr" - Raw (unpadded) standard base64
+  "b64u" - URL-safe base64
+  "b64ur" - Raw (unpadded) URL-safe base64
+  "b32s" - Standard base32
+  "b32sr" - Raw (unpadded) standard base32
+  "b32h" - Extended hex base32
+  "b32hr" - Raw (unpadded) extended hex base32
  `)
 	flag.StringVar(&s, "s", "16", `Size of random byte strings, can be an integer or an inclusive range, e.g. "16-32"`)
 	flag.IntVar(&n, "n", 1, "Number of random byte strings")
@@ -37,6 +42,10 @@ func main() {
 		"b64sr": base64.RawStdEncoding,
 		"b64u":  base64.URLEncoding,
 		"b64ur": base64.RawURLEncoding,
+		"b32s":  base32.StdEncoding,
+		"b32sr": base32.StdEncoding.WithPadding(base32.NoPadding),
+		"b32h":  base32.HexEncoding,
+		"b32hr": base32.HexEncoding.WithPadding(base32.NoPadding),
 	}
 	enc, ok := encodings[e]
 	if !ok {
