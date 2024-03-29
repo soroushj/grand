@@ -57,9 +57,13 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
-	// print encoded random strings
+	// define buffers
+	// random bytes will be written to b
+	// encoded random bytes will be written to be
+	// hex produces the longest encodings with a length of n*2
 	b := make([]byte, sizeMax)
 	be := make([]byte, sizeMax*2)
+	// generate, encode, and print random byte strings
 	for range n {
 		l, err := size(sizeMin, sizeMax)
 		if err != nil {
