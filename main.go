@@ -164,12 +164,12 @@ func parseValidateSize(s string) (sizeMin, sizeMax int, err error) {
 	// validate
 	if sizeMin < 1 {
 		if isRange {
-			return 0, 0, errors.New("size min must be greater than zero")
+			return 0, 0, errors.New("size_min must be greater than zero")
 		}
 		return 0, 0, errors.New("size must be greater than zero")
 	}
 	if sizeMax < sizeMin {
-		return 0, 0, errors.New("size max must not be less than size min")
+		return 0, 0, errors.New("size_max must not be less than size_min")
 	}
 	return sizeMin, sizeMax, nil
 }
