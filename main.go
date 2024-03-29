@@ -38,7 +38,8 @@ func main() {
 		"b64u":  base64.URLEncoding,
 		"b64ur": base64.RawURLEncoding,
 	}
-	if _, ok := encodings[e]; !ok {
+	enc, ok := encodings[e]
+	if !ok {
 		fmt.Fprintf(os.Stderr, "invalid value %q for flag -e: encoding not found\n", e)
 		flag.Usage()
 		os.Exit(2)
@@ -56,12 +57,24 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
-
-	fmt.Println("e:", e)
-	fmt.Println("s:", sizeMin, sizeMax)
-	fmt.Println("n:", n)
-	rs, err := size(sizeMin, sizeMax)
-	fmt.Println("rs:", rs, err)
+	// print encoded random strings
+	b := make([]byte, sizeMax)
+	be := make([]byte, sizeMax*2)
+	for range n {
+		l, err := size(sizeMin, sizeMax)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error generating random size: %v", err)
+			os.Exit(1)
+		}
+		_, err = rand.Read(b[:l])
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error generating random byte string: %v", err)
+			os.Exit(1)
+		}
+		enc.Encode(be, b[:l])
+		le := enc.EncodedLen(l)
+		fmt.Println(string(be[:le]))
+	}
 }
 
 // size returns a cryptographically-secure random integer between sizeMin and sizeMax, inclusive.
