@@ -140,17 +140,22 @@ func parseValidateSize(s string) (sizeMin, sizeMax int, err error) {
 	return sizeMin, sizeMax, nil
 }
 
+// encoding contains two methods required for encoding byte slices.
+// It satisfies the standard library's base64 and base32 encodings.
 type encoding interface {
 	Encode(dst []byte, src []byte)
 	EncodedLen(n int) int
 }
 
+// hexEncoding satisfies encoding with thin wrappers around the standard library's hex functions.
 type hexEncoding struct{}
 
+// Encode wraps hex.Encode, ignoring its return value.
 func (*hexEncoding) Encode(dst []byte, src []byte) {
 	hex.Encode(dst, src)
 }
 
+// EncodedLen wraps hex.EncodedLen.
 func (*hexEncoding) EncodedLen(n int) int {
 	return hex.EncodedLen(n)
 }
