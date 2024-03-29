@@ -21,7 +21,7 @@ func main() {
   "b64sr" - Raw (unpadded) standard Base64
   "b64u" - URL-safe Base64
   "b64ur" - Raw (unpadded) URL-safe Base64
-`)
+ `)
 	flag.StringVar(&s, "s", "16", `Size of random byte strings, can be an integer or an inclusive range, e.g. "16-32"`)
 	flag.IntVar(&n, "n", 1, "Number of random byte strings")
 	flag.Parse()
