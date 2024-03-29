@@ -35,7 +35,7 @@ func main() {
 		"b64ur": base64.RawURLEncoding,
 	}
 	if _, ok := encodings[e]; !ok {
-		fmt.Fprintf(os.Stderr, "invalid value %q for flag -e: encoding not found\n", s)
+		fmt.Fprintf(os.Stderr, "invalid value %q for flag -e: encoding not found\n", e)
 		flag.Usage()
 		os.Exit(2)
 	}
