@@ -1,11 +1,13 @@
 package main
 
 import (
+	"crypto/rand"
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"flag"
 	"fmt"
+	"math/big"
 	"os"
 	"strconv"
 	"strings"
@@ -58,6 +60,23 @@ func main() {
 	fmt.Println("e:", e)
 	fmt.Println("s:", sizeMin, sizeMax)
 	fmt.Println("n:", n)
+	rs, err := size(sizeMin, sizeMax)
+	fmt.Println("rs:", rs, err)
+}
+
+// size returns a cryptographically-secure random integer between sizeMin and sizeMax, inclusive.
+// It panics if sizeMin > sizeMax.
+func size(sizeMin, sizeMax int) (int, error) {
+	if sizeMin == sizeMax {
+		return sizeMin, nil
+	}
+	rmax := big.NewInt(int64(sizeMax - sizeMin + 1))
+	r, err := rand.Int(rand.Reader, rmax)
+	if err != nil {
+		return 0, err
+	}
+	s := sizeMin + int(r.Int64())
+	return s, nil
 }
 
 type encoding interface {
