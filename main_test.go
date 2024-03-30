@@ -40,6 +40,9 @@ func TestGrand(t *testing.T) {
 			if exitCode != tc.exitCode {
 				t.Fatalf("exit code: got %v want %v", exitCode, tc.exitCode)
 			}
+			if tc.validateStdout == nil {
+				t.SkipNow()
+			}
 			s := strings.TrimSuffix(string(out), "\n")
 			r := strings.Split(s, "\n")
 			if err := tc.validateStdout(r); err != nil {
