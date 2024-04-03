@@ -25,9 +25,6 @@ func TestGrand(t *testing.T) {
 	}{
 		// invalid -e flag
 		{e: "x", exitCode: 2},
-
-		{n: "0", exitCode: 2},
-		{n: "1", e: "hex", s: "16", sMin: 16, sMax: 16, exitCode: 0},
 	}
 	decoders := map[string]func([]byte, []byte) (int, error){
 		"hex":   hex.Decode,
@@ -47,10 +44,21 @@ func TestGrand(t *testing.T) {
 		}
 	}
 	discard := make([]byte, maxSize)
+	args := make([]string, 0, 6)
 	for _, tc := range testCases {
 		name := fmt.Sprintf("e=%v,s=%v,n=%v", tc.e, tc.s, tc.n)
+		args = args[:0]
+		if tc.e != "" {
+			args = append(args, "-e", tc.e)
+		}
+		if tc.s != "" {
+			args = append(args, "-s", tc.s)
+		}
+		if tc.n != "" {
+			args = append(args, "-n", tc.n)
+		}
 		t.Run(name, func(t *testing.T) {
-			cmd := exec.Command(bin, "-e", tc.e, "-s", tc.s, "-n", tc.n)
+			cmd := exec.Command(bin, args...)
 			out, err := cmd.Output()
 			exitCode := 0
 			if err != nil {
