@@ -11,8 +11,8 @@
 //	      "hex"   - base16
 //	      "b64s"  - base64, standard alphabet
 //	      "b64sr" - base64, standard alphabet, no padding
-//	      "b64u"  - base64, url safe alphabet
-//	      "b64ur" - base64, url safe alphabet, no padding
+//	      "b64u"  - base64, URL-safe alphabet
+//	      "b64ur" - base64, URL-safe alphabet, no padding
 //	      "b32s"  - base32, standard alphabet
 //	      "b32sr" - base32, standard alphabet, no padding
 //	      "b32h"  - base32, extended hex alphabet
@@ -56,8 +56,8 @@ func main() {
   "hex"   - base16
   "b64s"  - base64, standard alphabet
   "b64sr" - base64, standard alphabet, no padding
-  "b64u"  - base64, url safe alphabet
-  "b64ur" - base64, url safe alphabet, no padding
+  "b64u"  - base64, URL-safe alphabet
+  "b64ur" - base64, URL-safe alphabet, no padding
   "b32s"  - base32, standard alphabet
   "b32sr" - base32, standard alphabet, no padding
   "b32h"  - base32, extended hex alphabet
