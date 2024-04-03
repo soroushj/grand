@@ -16,8 +16,8 @@ func TestGrand(t *testing.T) {
 	// env var BIN must be set to the path of a grand binary
 	bin := os.Getenv("BIN")
 	testCases := []struct {
-		n        string
 		e        string
+		n        string
 		s        string
 		sMin     int
 		sMax     int
@@ -25,6 +25,9 @@ func TestGrand(t *testing.T) {
 	}{
 		// invalid -e flag
 		{e: "x", exitCode: 2},
+		// invalid -n flag
+		{n: "x", exitCode: 2},
+		{n: "0", exitCode: 2},
 		// invalid -s flag
 		{s: "x", exitCode: 2},
 		{s: "0", exitCode: 2},
@@ -32,9 +35,6 @@ func TestGrand(t *testing.T) {
 		{s: "1-x", exitCode: 2},
 		{s: "0-1", exitCode: 2},
 		{s: "2-1", exitCode: 2},
-		// invalid -n flag
-		{n: "x", exitCode: 2},
-		{n: "0", exitCode: 2},
 	}
 	decoders := map[string]func([]byte, []byte) (int, error){
 		"hex":   hex.Decode,
