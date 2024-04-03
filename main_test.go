@@ -15,6 +15,9 @@ import (
 func TestGrand(t *testing.T) {
 	// env var BIN must be set to the path of a grand binary
 	bin := os.Getenv("BIN")
+	if bin == "" {
+		t.Fatal("env var BIN is not set (use the test.sh script)")
+	}
 	testCases := []struct {
 		e        string
 		n        string
