@@ -38,6 +38,16 @@ func TestGrand(t *testing.T) {
 		// range size
 		{e: "hex", n: "2", s: "8-8", sMin: 8, sMax: 8},
 		{e: "hex", n: "2", s: "8-16", sMin: 8, sMax: 16},
+		// all encodings
+		{e: "hex", n: "1", s: "16", sMin: 16, sMax: 16},
+		{e: "b64s", n: "1", s: "16", sMin: 16, sMax: 16},
+		{e: "b64sr", n: "1", s: "16", sMin: 16, sMax: 16},
+		{e: "b64u", n: "1", s: "16", sMin: 16, sMax: 16},
+		{e: "b64ur", n: "1", s: "16", sMin: 16, sMax: 16},
+		{e: "b32s", n: "1", s: "16", sMin: 16, sMax: 16},
+		{e: "b32sr", n: "1", s: "16", sMin: 16, sMax: 16},
+		{e: "b32h", n: "1", s: "16", sMin: 16, sMax: 16},
+		{e: "b32hr", n: "1", s: "16", sMin: 16, sMax: 16},
 	}
 	decoders := map[string]func([]byte, []byte) (int, error){
 		"hex":   hex.Decode,
