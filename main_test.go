@@ -32,6 +32,9 @@ func TestGrand(t *testing.T) {
 		{s: "1-x", exitCode: 2},
 		{s: "0-1", exitCode: 2},
 		{s: "2-1", exitCode: 2},
+		// invalid -n flag
+		{n: "x", exitCode: 2},
+		{n: "0", exitCode: 2},
 	}
 	decoders := map[string]func([]byte, []byte) (int, error){
 		"hex":   hex.Decode,
