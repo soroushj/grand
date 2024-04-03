@@ -13,6 +13,7 @@ import (
 )
 
 func TestGrand(t *testing.T) {
+	// env var BIN must be set to the path of a grand binary
 	bin := os.Getenv("BIN")
 	testCases := []struct {
 		n        string
@@ -22,7 +23,9 @@ func TestGrand(t *testing.T) {
 		sMax     int
 		exitCode int
 	}{
+		// invalid -e flag
 		{e: "x", exitCode: 2},
+
 		{n: "0", exitCode: 2},
 		{n: "1", e: "hex", s: "16", sMin: 16, sMax: 16, exitCode: 0},
 	}
