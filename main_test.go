@@ -35,6 +35,9 @@ func TestGrand(t *testing.T) {
 		{s: "1-x", exitCode: 2},
 		{s: "0-1", exitCode: 2},
 		{s: "2-1", exitCode: 2},
+		// range size
+		{e: "hex", n: "2", s: "8-8", sMin: 8, sMax: 8},
+		{e: "hex", n: "2", s: "8-16", sMin: 8, sMax: 16},
 	}
 	decoders := map[string]func([]byte, []byte) (int, error){
 		"hex":   hex.Decode,
