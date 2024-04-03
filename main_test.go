@@ -12,6 +12,7 @@ import (
 	"testing"
 )
 
+// TestGrand is an end-to-end test for the grand CLI tool
 func TestGrand(t *testing.T) {
 	// env var BIN must be set to the path of a grand binary
 	bin := os.Getenv("BIN")
