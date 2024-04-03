@@ -10,7 +10,7 @@ go build -cover -o "$BIN" .
 GOCOVERDIR="$TMP_DIR/cover"
 mkdir "$GOCOVERDIR"
 
-BIN="$BIN" GOCOVERDIR="$GOCOVERDIR" go test -v -count=1 .
+BIN="$BIN" GOCOVERDIR="$GOCOVERDIR" go test -v .
 go tool covdata percent -i "$GOCOVERDIR"
 
 rm -rf "$TMP_DIR"
